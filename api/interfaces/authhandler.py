@@ -8,6 +8,8 @@ from api.interfaces.oauth import verify_token
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
+from api.models import User
+
 AUTH0_DOMAIN = settings.AUTH0_DOMAIN
 CLIENT_ID = settings.AUTH0_M2M_CLIENT_ID
 CLIENT_SECRET = settings.AUTH0_M2M_CLIENT_SECRET
@@ -19,6 +21,17 @@ class UserManagement:
     A class to manage user authentication and authorization using Auth0.
     It provides methods to create a user and verify a token.
     """
+    def _save_user_to_db(self, user_data):
+        """
+        Save the user data to the database.
+        """
+        email = user_data.get("email", "")
+        user_id = user_data.get("user_id", "")
+        name = user_data.get("name", "")
+
+        return User.objects.create(openid_user_id=user_id, email=email, name=name)
+
+
     @csrf_exempt
     def create_user(self, request):
         """
@@ -39,14 +52,14 @@ class UserManagement:
                 return JsonResponse({"error": "Password is required"}, status=400)
 
             # Create user in Auth0
-            user = self.create_auth0_user(email, password)
+            user_data = self.create_auth0_user(email, password)
             """
             {"statusCode": 409, "error": "Conflict", "message": "The user already exists.", "errorCode": "auth0_idp_error"}}
             {"created_at": "2025-04-17T02:44:22.723Z", "email": "kipronokigen4@gmail.com", "email_verified": true, "identities": [{"connection": "Username-Password-Authentication", "user_id": "68006b06ce127a88b46349c6", "provider": "auth0", "isSocial": false}], "name": "kipronokigen4@gmail.com", "nickname": "kipronokigen4", "picture": "https://s.gravatar.com/avatar/efde4a529e208309a195c67eacf8726c?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fki.png", "updated_at": "2025-04-17T02:44:22.723Z", "user_id": "auth0|68006b06ce127a88b46349c6", "app_metadata": {"role": "admin"}}}
             """
 
-            print(user)
-            return JsonResponse({"message": "User created successfully", "user": user}, status=201)
+            user = self._save_user_to_db(user_data)
+            return JsonResponse({"message": "User created successfully", "user_id": str(user.id)}, status=201)
 
         except Exception as ex:
             return JsonResponse({"error": str(ex)}, status=500)
@@ -105,9 +118,6 @@ class UserManagement:
             return JsonResponse({"error": str(e)}, status=401)
 
 
-
-
-
 urlpatterns = [
-    path('create-customer/', UserManagement().create_user, name='create_customer'),
+    path('create-user/', UserManagement().create_user, name='create_user'),
 ]

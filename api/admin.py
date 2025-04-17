@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from api.models import Customer, Order
+from api.models import Customer, Order, User
 
 
 # Register your models here.
@@ -13,3 +13,8 @@ class CustomerAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('customer', 'amount', 'status', 'date_created')
     search_fields = ('customer__name', 'status')
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('openid_user_id', 'name', 'email')
+    search_fields = ('openid_user_id', 'name', 'email')

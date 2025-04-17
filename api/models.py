@@ -14,6 +14,8 @@ class BaseModel(models.Model):
 
     SYNC_MODEL = False
 
+    objects = models.Manager()
+
     class Meta(object):
         """Meta"""
         abstract = True
@@ -30,6 +32,13 @@ class GenericBaseModel(BaseModel):
         """Meta"""
         abstract = True
 
+class User(BaseModel):
+    openid_user_id = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+
+
+
 # customers model
 class Customer(GenericBaseModel):
     """
@@ -38,6 +47,7 @@ class Customer(GenericBaseModel):
     """
 
     phone_number = models.CharField(max_length=15, unique=True)
+    email = models.EmailField(unique=True)
     code= models.TextField(blank=True, null=True)
     def __str__(self):
         return self.name
@@ -49,6 +59,7 @@ class Order(BaseModel):
     """
 
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders')
+    item = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Completed', 'Completed')])
 
