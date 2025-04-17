@@ -121,3 +121,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AFRICASTALKING_API_KEY= 'atsk_77abb81641be90244ca457ec487187b402c32af48f4a053c164e440aed7a2b967bfc45be'
+AFRICASTALKING_SENDER_ID = '77421'
+AFRICAS_USERNAME = 'sandbox'
+
+AUTH0_M2M_CLIENT_ID='BiFe3tWNabGSz7041CXC8DW9Yu9N68YD'
+AUTH0_M2M_CLIENT_SECRET='kJjDF5h1tro8qrjg4cmMyeE3C4P5d4fqQBkZOXB-lozEHigkRQXMqMEZDBm4tYgA'
+
+AUTH0_DOMAIN='dev-vrtbtpvaqaxh54iu.us.auth0.com'
+AUTH0_AUDIENCE='https://dev-vrtbtpvaqaxh54iu.us.auth0.com/api/v2/'
