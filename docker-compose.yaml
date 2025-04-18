@@ -11,6 +11,8 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+    networks:
+      - customer_net
 
   web:
     image: kigencaleb/customer-order-api:latest
@@ -26,6 +28,11 @@ services:
     command: >
       sh -c "python manage.py migrate &&
              gunicorn customer_app.wsgi:application --bind 0.0.0.0:8000"
+    networks:
+      - customer_net
 
 volumes:
   postgres_data:
+
+networks:
+  customer_net:
