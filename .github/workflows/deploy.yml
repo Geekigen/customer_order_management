@@ -47,19 +47,34 @@ jobs:
         EC2_HOST: ${{ secrets.EC2_HOST }}
         EC2_USER: ${{ secrets.EC2_USER }}
       run: |
-        printf "%s" "${SSH_PRIVATE_KEY}" > key.pem
-        # Write SSH private key to file, preserving newlines
-        echo "${SSH_PRIVATE_KEY}" > key.pem
+        # Write SSH private key to file using a heredoc to preserve newlines
+        cat << 'EOF' > key.pem
+        ${{ secrets.SSH_PRIVATE_KEY }}
+        EOF
+        
+        # Set correct permissions
         chmod 400 key.pem
         
-        # Debug: Verify key file content (avoid logging the key itself)
+        # Debug: Inspect the key file
+        echo "Key file permissions and size:"
         ls -l key.pem
-        head -n 1 key.pem  # Should output: -----BEGIN RSA PRIVATE KEY-----
+        echo "First line of key.pem:"
+        head -n 1 key.pem
+        echo "Last line of key.pem:"
+        tail -n 1 key.pem
+        echo "Line count of key.pem:"
+        wc -l key.pem
+        
+        # Test key validity with ssh-keygen
+        echo "Testing key validity:"
+        ssh-keygen -y -P "" -f key.pem > /dev/null && echo "Key is valid" || echo "Key is invalid"
         
         # Test SSH connection with verbose output
-        ssh -o StrictHostKeyChecking=no -i key.pem -v ${EC2_USER}@${EC2_HOST} 'whoami' || true
+        echo "Testing SSH connection:"
+        ssh -o StrictHostKeyChecking=no -i key.pem -vvv ${EC2_USER}@${EC2_HOST} 'whoami' || true
         
         # Deploy to EC2
+        echo "Deploying to EC2..."
         ssh -o StrictHostKeyChecking=no -i key.pem ${EC2_USER}@${EC2_HOST} << 'EOF'
           docker pull ${DOCKER_USERNAME}/customer-order-api:latest
           cd ~/customer_order
