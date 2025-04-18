@@ -36,6 +36,10 @@ class User(BaseModel):
     openid_user_id = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    phone_number = models.CharField(null=True ,max_length=15, unique=True)
+    role = models.CharField(max_length=20, choices=[('admin', 'Admin'), ('user', 'User')], default='user')
+    def __str__(self):
+        return self.name
 
 
 

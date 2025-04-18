@@ -2,10 +2,12 @@ from functools import wraps
 from django.http import JsonResponse
 from api.interfaces.oauth import verify_token
 from api.models import User
+from django.utils.decorators import method_decorator
+from django.views import View
 
 def auth_required(view_func):
     @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
+    def _wrapped_view(self, request, *args, **kwargs):
         auth_header = request.headers.get("Authorization")
         if not auth_header or not auth_header.startswith("Bearer "):
             return JsonResponse({"error": "Authorization header missing or invalid"}, status=401)
@@ -34,7 +36,7 @@ def auth_required(view_func):
 
             # Attach user to request for downstream use
             request.user = user
-            return view_func(request, *args, **kwargs)
+            return view_func(self, request, *args, **kwargs)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=401)

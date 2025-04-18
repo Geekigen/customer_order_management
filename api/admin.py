@@ -16,5 +16,5 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('openid_user_id', 'name', 'email')
-    search_fields = ('openid_user_id', 'name', 'email')
+    list_display = ('openid_user_id', 'name', 'email', 'role','phone_number')
+    search_fields = ('openid_user_id', 'name', 'email', 'role')

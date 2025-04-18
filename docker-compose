@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: customerdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  web:
+    image: kigencaleb/customer-order-api:latest
+    depends_on:
+      - db
+    environment:
+      DB_NAME: customerdb
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn customer_app.wsgi:application --bind 0.0.0.0:8000"
+
+volumes:
+  postgres_data:

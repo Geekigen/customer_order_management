@@ -3,8 +3,10 @@ import requests
 from jose import jwt
 from jose.exceptions import JWTError
 
-AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
-AUTH0_AUDIENCE = os.getenv("AUTH0_AUDIENCE")
+from customer_app import settings
+
+AUTH0_DOMAIN = settings.AUTH0_DOMAIN
+AUTH0_AUDIENCE = settings.AUTH0_AUDIENCE
 ALGORITHMS = ["RS256"]
 
 def get_jwk():
