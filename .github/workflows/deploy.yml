@@ -77,7 +77,8 @@ jobs:
         echo "Deploying to EC2..."
         ssh -o StrictHostKeyChecking=no -i key.pem ${EC2_USER}@${EC2_HOST} << 'EOF'
           docker pull ${DOCKER_USERNAME}/customer-order-api:latest
-          cd ~/customer_orders
+          cd /home/ubuntu/customer_order_management
+          git pull origin main 
           docker-compose down
           docker-compose up -d --build
         EOF
