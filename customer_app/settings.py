@@ -68,7 +68,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'customer_app.wsgi.application'
-CSRF_TRUSTED_ORIGINS = ["ec2-18-142-238-98.ap-southeast-1.compute.amazonaws.com"]
+CSRF_TRUSTED_ORIGINS = ["http://ec2-18-142-238-98.ap-southeast-1.compute.amazonaws.com"]
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
