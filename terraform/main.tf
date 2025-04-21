@@ -9,7 +9,7 @@ data "aws_vpc" "default" {
 
 # Create Security Group
 resource "aws_security_group" "savanna_sg" {
-  name        = "savanna-app-sg"
+  name        = "savanna-app-sg-new"
   description = "Allow SSH and Django app traffic"
   vpc_id      = data.aws_vpc.default.id
 
