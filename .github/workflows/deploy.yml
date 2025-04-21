@@ -159,8 +159,8 @@ jobs:
         mkdir -p ansible
 
         # Better handling of SSH key writing
-        echo "${{ secrets.EC2_SSH_KEY }}" > ansible/id_rsa
-        chmod 600 ansible/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ansible/id_rsa
+        chmod 400 ansible/id_rsa
 
         # Debug key file
         ls -la ansible/id_rsa
