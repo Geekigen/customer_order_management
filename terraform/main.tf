@@ -1,25 +1,11 @@
 terraform {
   backend "s3" {
-    bucket         = "savannas3"
-    key            = "terraform.tfstate"
+    bucket         = "savannas3" # Replace with your S3 bucket name
+    key            = "terraform.tfstate"         # Path to the state file in the bucket
     region         = "ap-southeast-1"
-    dynamodb_table = "terraform-locks"
+    dynamodb_table = "terraform-locks"           # DynamoDB table for locking + state locking
   }
 }
-
-# Resource definition for the existing DynamoDB table
-resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "terraform-locks"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"  # This must be LockID for Terraform state locking
-
-  attribute {
-    name = "LockID"
-    type = "S"  # String type
-  }
-}
-
-# Your other resources (provider, vpc, security group, ec2, etc.) remain unchanged
 provider "aws" {
   region = "ap-southeast-1"
 }
@@ -83,7 +69,7 @@ resource "aws_instance" "savanna_server" {
 
   associate_public_ip_address = true
 
-  vpc_security_group_ids = [aws_security_group.savanna_sg.id]
+  vpc_security_group_ids = [aws_security_group.savanna_sg.id] # ✅ Attach SG here
 
   tags = {
     Name = "savanna-ec2"
