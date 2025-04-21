@@ -1,11 +1,29 @@
 terraform {
   backend "s3" {
-    bucket         = "savannas3" # Replace with your S3 bucket name
-    key            = "terraform.tfstate"         # Path to the state file in the bucket
+    bucket         = "savannas3"
+    key            = "terraform.tfstate"
     region         = "ap-southeast-1"
-    dynamodb_table = "terraform-locks"           # DynamoDB table for locking + state locking
+    dynamodb_table = "terraform-locks"
   }
 }
+
+# Resource definition for the existing DynamoDB table
+# Note: You'll need to import this if the table already exists
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "6507"  # Partition key required for Terraform state locking
+
+  attribute {
+    name = "LockID"
+    type = "S"  # String type
+  }
+
+
+}
+
+# Your other Terraform resources would go here
+# ...
 provider "aws" {
   region = "ap-southeast-1"
 }
