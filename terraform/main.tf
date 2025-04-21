@@ -8,22 +8,18 @@ terraform {
 }
 
 # Resource definition for the existing DynamoDB table
-# Note: You'll need to import this if the table already exists
 resource "aws_dynamodb_table" "terraform_locks" {
   name         = "terraform-locks"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "6507"  # Partition key required for Terraform state locking
+  hash_key     = "LockID"  # This must be LockID for Terraform state locking
 
   attribute {
     name = "LockID"
     type = "S"  # String type
   }
-
-
 }
 
-# Your other Terraform resources would go here
-# ...
+# Your other resources (provider, vpc, security group, ec2, etc.) remain unchanged
 provider "aws" {
   region = "ap-southeast-1"
 }
@@ -87,7 +83,7 @@ resource "aws_instance" "savanna_server" {
 
   associate_public_ip_address = true
 
-  vpc_security_group_ids = [aws_security_group.savanna_sg.id] # ✅ Attach SG here
+  vpc_security_group_ids = [aws_security_group.savanna_sg.id]
 
   tags = {
     Name = "savanna-ec2"
