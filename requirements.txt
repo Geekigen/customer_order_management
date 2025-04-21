@@ -6,12 +6,20 @@ cffi==1.17.1
 charset-normalizer==3.4.1
 cryptography==44.0.2
 Django==5.2
+dotenv==0.9.9
 ecdsa==0.19.1
+gunicorn==23.0.0
 idna==3.10
+iniconfig==2.1.0
+packaging==24.2
+pluggy==1.5.0
 psycopg2-binary==2.9.10
 pyasn1==0.4.8
 pycparser==2.22
 PyJWT==2.10.1
+pytest==8.3.5
+pytest-django==4.11.1
+python-dotenv==1.1.0
 python-jose==3.4.0
 requests==2.32.3
 rsa==4.9.1
@@ -19,4 +27,4 @@ schema==0.7.7
 six==1.17.0
 sqlparse==0.5.3
 urllib3==2.4.0
-gunicorn==23.0.0
+whitenoise==6.9.0

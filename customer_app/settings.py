@@ -15,7 +15,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+from dotenv import load_dotenv
 
+load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -23,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o!z_l((b9g(vs9p^c06ud7)^lb%4i(r%1d5bsf+-_o*npv%7^o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]  # Allow all hosts for development purposes
 
@@ -38,16 +40,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
+    'customer_app'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'customer_app.urls'
@@ -73,23 +78,23 @@ CSRF_TRUSTED_ORIGINS = ["http://ec2-18-142-238-98.ap-southeast-1.compute.amazona
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('DB_NAME'),
+#         'USER': os.getenv('DB_USER'),
+#         'PASSWORD': os.getenv('DB_PASSWORD'),
+#         'HOST': os.getenv('DB_HOST'),
+#         'PORT': '5432',
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -120,13 +125,14 @@ USE_I18N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'api.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -135,15 +141,21 @@ AFRICASTALKING_API_KEY= 'atsk_77abb81641be90244ca457ec487187b402c32af48f4a053c16
 AFRICASTALKING_SENDER_ID = '77421'
 AFRICAS_USERNAME = 'sandbox'
 
-AUTH0_M2M_CLIENT_ID='BiFe3tWNabGSz7041CXC8DW9Yu9N68YD'
-AUTH0_M2M_CLIENT_SECRET='kJjDF5h1tro8qrjg4cmMyeE3C4P5d4fqQBkZOXB-lozEHigkRQXMqMEZDBm4tYgA'
-
-AUTH0_DOMAIN='dev-vrtbtpvaqaxh54iu.us.auth0.com'
-# https://dev-vrtbtpvaqaxh54iu.us.auth0.com/api/v2/
-AUTH0_AUDIENCE='https://dev-vrtbtpvaqaxh54iu.us.auth0.com/api/v2/'
-ADMIN_API_KEY = '123456721'
-AUTH0_API_URL='https://dev-vrtbtpvaqaxh54iu.us.auth0.com/api/v2'
-AUTH0_CLIENT_ID='eQjd8fmMQ8jSaoSDoikUmViV7LRoNQXX'
-AUTH0_CLIENT_SECRET='1V6CM2Hn4rsy8WmjFXWcfd5r3AByRggw3_RSmA_W0tMnPvfEXK7jGK3GBOhL345W'
-AUTH0_USER_CLIENT_ID = "fyjizP3bktUeKQrLa48TgrmsThIYuSSB"
-AUTH0_USER_CLIENT_SECRET = "IFiwPIg6_xWYPzGVX1EXf9UzdACKsa05VatPWlhHyiCSyKd6rOlP0lmE0f1wiEgJ"
+AUTH0_M2M_CLIENT_ID = os.environ.get('AUTH0_M2M_CLIENT_ID')
+AUTH0_M2M_CLIENT_SECRET = os.environ.get('AUTH0_M2M_CLIENT_SECRET')
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+AUTH0_AUDIENCE = os.environ.get('AUTH0_AUDIENCE')
+ADMIN_API_KEY = os.environ.get('ADMIN_API_KEY')
+AUTH0_API_URL = os.environ.get('AUTH0_API_URL')
+AUTH0_CLIENT_ID = os.environ.get('AUTH0_CLIENT_ID')
+AUTH0_CLIENT_SECRET = os.environ.get('AUTH0_CLIENT_SECRET')
+AUTH0_USER_CLIENT_ID = os.environ.get('AUTH0_USER_CLIENT_ID')
+AUTH0_USER_CLIENT_SECRET = os.environ.get('AUTH0_USER_CLIENT_SECRET')
+AUTH0_FRONTEND_CLIENT_ID = os.environ.get('AUTH0_FRONTEND_CLIENT_ID')
+AUTH0_FRONTEND_CLIENT_SECRET = os.environ.get('AUTH0_FRONTEND_CLIENT_SECRET')
+JWT_SECRET = os.environ.get('JWT_SECRET')
+JWT_ALGORITHM = 'HS256'
+JWT_TOKEN_EXPIRATION =  30 * 24 * 60
+JWT_AUDIENCE =  'your-app-name'
+JWT_ISSUER =  'your-api-domain'
+JWT_LEEWAY = 60

@@ -6,7 +6,7 @@ from api.models import Customer, Order, User
 # Register your models here.
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'phone_number', 'date_created')
+    list_display = ('name', 'code', 'user', 'date_created')
     search_fields = ('name', 'code', 'phone_number')
 
 @admin.register(Order)
