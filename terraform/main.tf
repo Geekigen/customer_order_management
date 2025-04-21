@@ -43,7 +43,8 @@ resource "aws_security_group" "savanna_sg" {
 
 # EC2 instance
 resource "aws_instance" "savanna_server" {
-  ami           = "ami-01938df366ac2d954" # Ubuntu 22.04 LTS
+  ami = "ami-0c1907b6d738188e5" # Ubuntu 22.04 LTS
+
   instance_type = "t2.micro"
   key_name      = var.key_name
 
