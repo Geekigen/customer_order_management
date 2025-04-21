@@ -25,7 +25,7 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-o!z_l((b9g(vs9p^c06ud7)^lb%4i(r%1d5bsf+-_o*npv%7^o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]  # Allow all hosts for development purposes
 
@@ -78,23 +78,23 @@ CSRF_TRUSTED_ORIGINS = ["http://ec2-18-142-238-98.ap-southeast-1.compute.amazona
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('DB_NAME'),
-#         'USER': os.getenv('DB_USER'),
-#         'PASSWORD': os.getenv('DB_PASSWORD'),
-#         'HOST': os.getenv('DB_HOST'),
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': '5432',
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -137,7 +137,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AFRICASTALKING_API_KEY= 'atsk_77abb81641be90244ca457ec487187b402c32af48f4a053c164e440aed7a2b967bfc45be'
+AFRICASTALKING_API_KEY= os.environ.get('AFRICASTALKING_API_KEY')
 AFRICASTALKING_SENDER_ID = '77421'
 AFRICAS_USERNAME = 'sandbox'
 
