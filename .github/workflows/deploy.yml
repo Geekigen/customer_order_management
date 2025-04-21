@@ -169,7 +169,6 @@ jobs:
         EC2_IP=$(cat ansible/ec2_ip.txt)
         echo "EC2 IP: $EC2_IP"
         echo "Waiting 60 seconds for instance to be fully ready..."
-        sleep 60
 
         # Create hosts file
         echo "[all]" > ansible/hosts
@@ -228,7 +227,7 @@ jobs:
     - name: Deploy to EC2
       run: |
         EC2_IP=$(cat ansible/ec2_ip.txt)
-        echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
         chmod 400 key.pem
 
         ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$EC2_IP << EOF
