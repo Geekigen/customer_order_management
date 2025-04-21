@@ -9,7 +9,7 @@ data "aws_vpc" "default" {
 
 # Create Security Group
 resource "aws_security_group" "savanna_sg" {
-  name        = "savanna-app-sg-new"
+  name_prefix = "savanna-app-sg-"
   description = "Allow SSH and Django app traffic"
   vpc_id      = data.aws_vpc.default.id
 
@@ -28,6 +28,12 @@ resource "aws_security_group" "savanna_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   egress {
     from_port   = 0
@@ -38,6 +44,11 @@ resource "aws_security_group" "savanna_sg" {
 
   tags = {
     Name = "savanna-app-sg"
+  }
+
+  # This prevents recreation of the security group when only tags change
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
