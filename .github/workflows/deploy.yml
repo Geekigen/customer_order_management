@@ -232,8 +232,23 @@ jobs:
 
         ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$EC2_IP << EOF
           docker pull ${{ secrets.DOCKER_USERNAME }}/customer-order-api:latest
+           # Create directory if it doesn't exist
+          mkdir -p /home/ubuntu/customer_order_management
+      
+          # Change to that directory
           cd /home/ubuntu/customer_order_management
-          git pull origin main
+        
+          # Initialize git repo if not already a git repo
+          if [ ! -d .git ]; then
+            git init
+            git config --global --add safe.directory /home/ubuntu/customer_order_management
+            git remote add origin https://github.com/geekigen/customer_order_management.git || true
+          fi
+      
+          # Pull the latest code
+          git fetch --all
+          git reset --hard origin/main
+        
           docker-compose down
           docker-compose up -d --build
         EOF
