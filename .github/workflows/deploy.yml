@@ -111,6 +111,20 @@ on:
 jobs:
   provision-and-deploy:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - name: Checkout code
@@ -147,21 +161,6 @@ jobs:
         echo "[all]" > ansible/hosts
         echo "$EC2_IP ansible_user=ubuntu ansible_ssh_private_key_file=./ansible/id_rsa ansible_python_interpreter=/usr/bin/python3" >> ansible/hosts
         ansible-playbook -i ansible/hosts ansible/playbook.yml
-
-    - services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     # Set up Python (for tests, optional)
     - name: Set up Python
