@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket         = "savannas3" # Replace with your S3 bucket name
+    key            = "terraform.tfstate"         # Path to the state file in the bucket
+    region         = "ap-southeast-1"
+    dynamodb_table = "terraform-locks"           # DynamoDB table for locking + state locking
+  }
+}
 provider "aws" {
   region = "ap-southeast-1"
 }
