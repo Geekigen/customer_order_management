@@ -155,16 +155,36 @@ jobs:
     # Provision server with Ansible
     - name: Provision EC2 with Ansible
       run: |
+        # Create directory if it doesn't exist
+        mkdir -p ansible
+
+        # Better handling of SSH key writing
         echo "${{ secrets.EC2_SSH_KEY }}" > ansible/id_rsa
         chmod 600 ansible/id_rsa
+
+        # Debug key file
+        ls -la ansible/id_rsa
+
+        # Get EC2 IP and wait to ensure instance is ready
         EC2_IP=$(cat ansible/ec2_ip.txt)
+        echo "EC2 IP: $EC2_IP"
+        echo "Waiting 60 seconds for instance to be fully ready..."
+        sleep 60
+
+        # Create hosts file
         echo "[all]" > ansible/hosts
-        echo "$EC2_IP ansible_user=ubuntu ansible_ssh_private_key_file=./ansible/id_rsa ansible_python_interpreter=/usr/bin/python3" >> ansible/hosts
+        echo "$EC2_IP ansible_user=ubuntu ansible_ssh_private_key_file=./ansible/id_rsa ansible_python_interpreter=/usr/bin/python3 ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> ansible/hosts
+        cat ansible/hosts
 
         # Create ansible.cfg with host key checking disabled
         echo "[defaults]" > ansible/ansible.cfg
         echo "host_key_checking = False" >> ansible/ansible.cfg
-        ansible-playbook -i ansible/hosts ansible/playbook.yml
+
+        # Try to SSH manually first to debug
+        ssh -i ansible/id_rsa -o StrictHostKeyChecking=no ubuntu@$EC2_IP "echo 'SSH connection successful'" || echo "SSH connection failed but continuing"
+
+        # Run ansible with verbose output
+        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/hosts ansible/playbook.yml -vvv
 
     # Set up Python (for tests, optional)
     - name: Set up Python
