@@ -1,21 +1,21 @@
 terraform {
   backend "s3" {
-    bucket         = "savannas3" # Replace with your S3 bucket name
-    key            = "terraform.tfstate"         # Path to the state file in the bucket
+    bucket         = "savannas3"
+    key            = "terraform.tfstate"
     region         = "ap-southeast-1"
-    dynamodb_table = "terraform-locks"           # DynamoDB table for locking + state locking
+    dynamodb_table = "terraform-locks"
   }
 }
 provider "aws" {
   region = "ap-southeast-1"
 }
 
-# Get the default VPC
+
 data "aws_vpc" "default" {
   default = true
 }
 
-# Create Security Group
+
 resource "aws_security_group" "savanna_sg" {
   name = "savanna-app-sg"
   description = "Allow SSH and Django app traffic"
@@ -54,15 +54,15 @@ resource "aws_security_group" "savanna_sg" {
     Name = "savanna-app-sg"
   }
 
-  # This prevents recreation of the security group when only tags change
+
   lifecycle {
     create_before_destroy = true
   }
 }
 
-# EC2 instance
+
 resource "aws_instance" "savanna_server" {
-  ami = "ami-01938df366ac2d954" # Ubuntu 22.04 LTS
+  ami = "ami-01938df366ac2d954"
 
   instance_type = "t2.micro"
   key_name      = var.key_name
@@ -83,7 +83,7 @@ resource "aws_instance" "savanna_server" {
   }
 }
 
-# Output public IP
+
 output "public_ip" {
   value = aws_instance.savanna_server.public_ip
 }
