@@ -51,8 +51,8 @@ jobs:
         sudo apt update
         sudo apt install -y ansible
 
-    # Provision server with Ansible
-    - name: Provision EC2 with Ansible
+    # Configure server with Ansible
+    - name: Configure EC2 with Ansible
       run: |
         
         mkdir -p ansible
