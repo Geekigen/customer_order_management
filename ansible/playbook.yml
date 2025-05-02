@@ -1,4 +1,4 @@
-- name: Setup Django EC2 server
+- name: Setup Docker in  EC2 server
   hosts: all
   become: true
 

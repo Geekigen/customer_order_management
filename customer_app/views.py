@@ -72,4 +72,5 @@ def index(request):
         "session": request.session.get("user"),
         "pretty": json.dumps(request.session.get("user"), indent=4),
     }
+    
     return HttpResponse(template.render(context, request))
